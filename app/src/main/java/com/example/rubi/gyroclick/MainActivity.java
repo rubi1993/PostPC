@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mSensor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("onCreate for MainActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         int SDK_INT = android.os.Build.VERSION.SDK_INT;
@@ -60,11 +61,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         Intent intent = getIntent();
         String value = intent.getStringExtra("connection_value"); //if it's a string you stored.
-        System.out.println(value);
-        String[] substring = value.split(":");
-        ConnectionData.IP_ADDR = substring[1];
-        ConnectionData.PORT = Integer.parseInt(substring[2]);
-        System.out.println("ConnectionData: " + ConnectionData.IP_ADDR + ":" + ConnectionData.PORT);
+        if (value != null) {
+            String[] substring = value.split(":");
+            ConnectionData.IP_ADDR = substring[1];
+            ConnectionData.PORT = Integer.parseInt(substring[2]);
+            System.out.println("ConnectionData: " + ConnectionData.IP_ADDR + ":" + ConnectionData.PORT);
+
+        }
 
 
         connectPhoneTask.execute(ConnectionData.IP_ADDR);
@@ -93,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent myIntent = new Intent(MainActivity.this, QRScanner.class);
+        MainActivity.this.startActivity(myIntent);
+        outStream.close();
         finish();
     }
 
@@ -156,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         prev_y = axis_acceleration[1];
         if (isConnected)
         {
-            Toast.makeText(activityContext, String.valueOf(prev_x - axis_acceleration[0]) + "," + String.valueOf(prev_y - axis_acceleration[1]), Toast.LENGTH_LONG).show();
+//            Toast.makeText(activityContext, String.valueOf(prev_x - axis_acceleration[0]) + "," + String.valueOf(prev_y - axis_acceleration[1]), Toast.LENGTH_LONG).show();
             Log.d("acceleration: ", "x: " + axis_acceleration[0] + " y: " + axis_acceleration[1] + " z: " + axis_acceleration[2]);
 //            outStream.println(String.valueOf(prev_x - axis_acceleration[0]) + "," + String.valueOf(prev_y - axis_acceleration[1]));
             outStream.println(String.valueOf(event.values[0]+","+event.values[1]+","+event.values[2]));

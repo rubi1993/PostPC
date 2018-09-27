@@ -25,26 +25,41 @@ public class IntroActivity extends AppIntro {
         // AppIntro will do the rest.
 
         SliderPage sliderPage = new SliderPage();
-        sliderPage.setTitle("title");
-        sliderPage.setDescription("desc");
-//        sliderPage.setImageDrawable("image");
+        sliderPage.setTitle("Welcome to GyroClick app!");
+        sliderPage.setDescription("Easy and intuitive control over your mouse\nWith GyroClick, you can control over your mouse in an intuitive, secure and " +
+                "fun way.");
+        sliderPage.setImageDrawable(R.drawable.logo_splash_white);
 //        sliderPage.setBgColor();
         addSlide(AppIntroFragment.newInstance(sliderPage));
 
 
         SliderPage sliderPage2 = new SliderPage();
-        sliderPage2.setTitle("title");
-        sliderPage2.setDescription("desc");
-//        sliderPage.setImageDrawable("image");
-        sliderPage2.setBgColor(Color.rgb(1,12,22));
+        sliderPage2.setTitle("Start by scanning the QR code");
+        sliderPage2.setDescription("In order to connect to a host PC, you will need to open the GyroClick Desktop app " +
+                        "and scan the QR code that will be generated for you");
+        sliderPage2.setImageDrawable(R.drawable.barcode_splash);
+        sliderPage2.setBgColor(Color.parseColor("#BDEEF2"));
+        sliderPage2.setDescColor(Color.parseColor("#4d4d4d"));
+        sliderPage2.setTitleColor(Color.parseColor("#4d4d4d"));
         addSlide(AppIntroFragment.newInstance(sliderPage2));
 
 
 
+        SliderPage sliderPage3 = new SliderPage();
+        sliderPage3.setTitle("Rotate to control");
+        sliderPage3.setDescription("Rotate your smartphone in all axis and discover the ease of controlling your PC");
+        sliderPage3.setImageDrawable(R.drawable.rotate_splash);
+        sliderPage3.setBgColor(Color.parseColor("#B9E196"));
+        sliderPage3.setDescColor(Color.parseColor("#000000"));
+        sliderPage3.setTitleColor(Color.parseColor("#000000"));
+        addSlide(AppIntroFragment.newInstance(sliderPage3));
+
+
         // OPTIONAL METHODS
         // Override bar/separator color.
-        setBarColor(Color.parseColor("#3F51B5"));
-        setSeparatorColor(Color.parseColor("#2196F3"));
+//        setBarColor(Color.parseColor("#3F51B5"));
+
+        setSeparatorColor(Color.parseColor("#8ACBEE"));
 
         // Hide Skip/Done button.
         showSkipButton(true);
@@ -67,8 +82,9 @@ public class IntroActivity extends AppIntro {
 
     @Override
     public void onBackPressed() {
+            System.out.println("is it here");
             super.onBackPressed();
-            finish();
+            finishAffinity();
         }
 
     @Override
