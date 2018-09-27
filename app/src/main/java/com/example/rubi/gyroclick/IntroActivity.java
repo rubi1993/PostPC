@@ -25,8 +25,8 @@ public class IntroActivity extends AppIntro {
         // AppIntro will do the rest.
 
         SliderPage sliderPage = new SliderPage();
-        sliderPage.setTitle("title");
-        sliderPage.setDescription("desc");
+        sliderPage.setTitle("Welcome to GyroClick app!");
+        sliderPage.setDescription("Easy and intuitive control over your mouse");
 //        sliderPage.setImageDrawable("image");
 //        sliderPage.setBgColor();
         addSlide(AppIntroFragment.newInstance(sliderPage));
