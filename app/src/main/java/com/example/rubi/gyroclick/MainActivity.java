@@ -1,6 +1,7 @@
 package com.example.rubi.gyroclick;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -25,6 +26,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.InetAddress;
+import java.sql.Connection;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -54,6 +56,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         rightbutton = findViewById(R.id.rightbutton);
         activityContext  = this;
         ConnectPhoneTask connectPhoneTask = new ConnectPhoneTask();
+
+
+        Intent intent = getIntent();
+        String value = intent.getStringExtra("connection_value"); //if it's a string you stored.
+        System.out.println(value);
+        String[] substring = value.split(":");
+        ConnectionData.IP_ADDR = substring[1];
+        ConnectionData.PORT = Integer.parseInt(substring[2]);
+        System.out.println("ConnectionData: " + ConnectionData.IP_ADDR + ":" + ConnectionData.PORT);
+
+
         connectPhoneTask.execute(ConnectionData.IP_ADDR);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null){
@@ -75,6 +88,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     @Override
