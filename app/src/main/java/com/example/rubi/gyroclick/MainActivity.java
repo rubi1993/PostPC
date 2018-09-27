@@ -12,7 +12,9 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 //import java.awt.AWTException;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             StrictMode.setThreadPolicy(policy);
         }
         rightbutton = findViewById(R.id.rightbutton);
+        leftbutton = findViewById(R.id.leftbutton);
         activityContext  = this;
         ConnectPhoneTask connectPhoneTask = new ConnectPhoneTask();
 
@@ -86,10 +89,47 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         rightbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                outStream.println("100,100");
-                Toast.makeText(activityContext,"right click",Toast.LENGTH_LONG).show();
+                outStream.println("right_click");
+//                Toast.makeText(activityContext,"right click",Toast.LENGTH_LONG).show();
 
             }
+        });
+        rightbutton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                    outStream.println("right_click_long");
+                    Log.d("Right TouchTest", "Right Touch down");
+                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
+                    outStream.println("right_click_stop");
+                    Log.d("Right TouchTest", "Right Touch up");
+                }
+                return true;
+            }
+
+        });
+
+        leftbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                outStream.println("left_click");
+//                Toast.makeText(activityContext,"right click",Toast.LENGTH_LONG).show();
+
+            }
+        });
+        leftbutton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                    outStream.println("left_click_long");
+                    Log.d("Left TouchTest", "Left Touch down");
+                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
+                    outStream.println("left_click_stop");
+                    Log.d("Left TouchTest", "Left Touch up");
+                }
+                return true;
+            }
+
         });
     }
 
