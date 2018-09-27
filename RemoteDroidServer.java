@@ -3,13 +3,8 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 
 public class RemoteDroidServer {
     private static int x,y;
@@ -23,16 +18,16 @@ public class RemoteDroidServer {
     private static String line;
     private static boolean isConnected=true;
     private static Robot robot;
-    private static final int SERVER_PORT = 8998;
+    protected static final int SERVER_PORT = 8998;
 
     private static void processSensorData(float movex,float movez,float movey){
         float magnitude=(float)Math.sqrt(movex*movex+movey*movey+movez*movez);
-        if (magnitude<0.25){
-   //         System.out.println("MAGNITUDE LESS THAN 0.25");
+        if (magnitude<0.10){
+            //         System.out.println("MAGNITUDE LESS THAN 0.25");
 
             return;
         }
-        final float sens =15.0f;
+        final float sens =35.0f;//15.0f
         int newx=(int)(movex*sens);
         int newy=(int)(movey*sens);
         move(newx,newy);
@@ -43,7 +38,23 @@ public class RemoteDroidServer {
         y=(y+movey)>MAX_Y?MAX_Y:((y+movey)<MIN_Y?MIN_Y:y+movey);
         robot.mouseMove(x,y);
     }
-    public static void main(String[] args) {
+    public static String getLocalIp() {
+
+        try(final DatagramSocket socket = new DatagramSocket()){
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+            String ip = socket.getLocalAddress().getHostAddress();
+            return ip;
+        } catch (SocketException e) {
+            System.out.println("Problem with datagram socket...");
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            System.out.println("Problem with unknown host...");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static void main() {
+        System.out.println("new main thread started...");
         boolean leftpressed=false;
         boolean rightpressed=false;
         Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
@@ -56,22 +67,31 @@ public class RemoteDroidServer {
         try{
             robot = new Robot();
             server = new ServerSocket(SERVER_PORT); //Create a server socket on port 8998
-            System.out.println(server.getLocalSocketAddress().toString());
+            System.out.println(getLocalIp());
             client = server.accept(); //Listens for a connection to be made to this socket and accepts it
             in = new BufferedReader(new InputStreamReader(client.getInputStream())); //the input stream where data will come from client
-        }catch (IOException e) {
+        }catch (SocketException e) {
+            System.out.println("Connection Closed.");
+        } catch (IOException e) {
             System.out.println("Error in opening Socket");
             System.exit(-1);
         }catch (AWTException e) {
             System.out.println("Error in creating robot instance");
             System.exit(-1);
         }
-
+        int counter = 0;
         //read input from client while it is connected
         while(isConnected){
             try{
+
                 line = in.readLine(); //read input from client
-            ///    System.out.println(line); //print whatever we get from client
+//                System.out.println(line); //print whatever we get from client
+
+                if (line == null) {
+                    client = server.accept(); //Listens for a connection to be made to this socket and accepts it
+                    in = new BufferedReader(new InputStreamReader(client.getInputStream())); //the input stream where data will come from client
+                    line = in.readLine();
+                }
 
                 //if user clicks on next
                 if(line.equalsIgnoreCase("next")){
@@ -110,11 +130,15 @@ public class RemoteDroidServer {
                 }
                 //Exit if user ends the connection
                 else if(line.equalsIgnoreCase("exit")){
-                    isConnected=false;
-                    //Close server and client socket
-                    server.close();
+                    System.out.println("Exit thru equals, restarting connection");
                     client.close();
+                    client = server.accept(); //Listens for a connection to be made to this socket and accepts it
+                    in = new BufferedReader(new InputStreamReader(client.getInputStream())); //the input stream where data will come from client
+                    line = in.readLine();
                 }
+            } catch (SocketException e) {
+                System.out.println("Connection Closed.");
+
             } catch (IOException e) {
                 System.out.println(e.getMessage());
                 System.exit(-1);
