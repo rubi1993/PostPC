@@ -21,6 +21,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         //  Create a new boolean and preference and set it to true
         boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
 
+        isFirstStart = true;
+
         //  If the activity has never started before...
         if (isFirstStart) {
 
@@ -36,9 +38,16 @@ public class SplashScreenActivity extends AppCompatActivity {
         } else {
             Intent intent = new Intent(getApplicationContext(),
                     QRScanner.class);
-            startActivity(intent);
+            SplashScreenActivity.this.startActivity(intent);
         }
 
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        System.out.println("onBackPressed - SplashScreen");
+        super.onBackPressed();
+        finishAffinity();
     }
 }

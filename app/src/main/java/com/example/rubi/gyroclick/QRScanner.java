@@ -63,7 +63,7 @@ public class QRScanner extends AppCompatActivity implements ZXingScannerView.Res
     public void onBackPressed() {
         System.out.println("onBackPressed - QRScanner");
         super.onBackPressed();
-        finish();
+        finishAffinity();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class QRScanner extends AppCompatActivity implements ZXingScannerView.Res
 
                     boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     if (cameraAccepted){
-                        Toast.makeText(getApplicationContext(), "Permission Granted, Now you can access camera", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_LONG).show();
                     }else {
                         Toast.makeText(getApplicationContext(), "Permission Denied, You cannot access and camera", Toast.LENGTH_LONG).show();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -134,11 +134,17 @@ public class QRScanner extends AppCompatActivity implements ZXingScannerView.Res
     @Override
     public void handleResult(Result result) {
         final String myResult = result.getText();
+        if (myResult.startsWith("connectTo:")) {
+            Intent myIntent = new Intent(QRScanner.this, MainActivity.class);
+            myIntent.putExtra("connection_value", myResult); //Optional parameters
+            QRScanner.this.startActivity(myIntent);
+        } else {
+            Toast.makeText(this, "QR Code is not in the correct pattern!", Toast.LENGTH_LONG).show();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
 
-        Intent myIntent = new Intent(QRScanner.this, MainActivity.class);
-        myIntent.putExtra("connection_value", myResult); //Optional parameters
-        QRScanner.this.startActivity(myIntent);
-
+        }
 
     }
 }
