@@ -20,17 +20,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/leftbutton"
         android:layout_width="195dp"
-        android:layout_height="match_parent"
+        android:layout_height="425dp"
         android:layout_marginBottom="1dp"
         android:layout_marginLeft="1dp"
         android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rightbutton"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/keyboard_button"
+        app:layout_constraintVertical_bias="1.0" />
+    <EditText
+        android:id="@+id/hiddenTxt"
+        android:layout_width="0px"
+        android:layout_height="0px" />
+    <ImageButton
+        android:id="@+id/keyboard_button"
+        android:layout_width="65dp"
+        android:layout_height="71dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/keyboard_icon" />
 
 </android.support.constraint.ConstraintLayout>
