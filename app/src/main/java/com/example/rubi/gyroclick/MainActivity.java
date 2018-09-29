@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 //import java.awt.AWTException;
@@ -24,11 +23,8 @@ import android.widget.Toast;
 //import java.awt.MouseInfo;
 //import java.awt.Point;
 import java.io.*;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.InetAddress;
-import java.sql.Connection;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -45,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     double prev_y = 0.0;
     private SensorManager mSensorManager;
     private Sensor mSensor;
+    private boolean isLongPress=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.println("onCreate for MainActivity");
@@ -90,46 +87,58 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 outStream.println("right_click");
-//                Toast.makeText(activityContext,"right click",Toast.LENGTH_LONG).show();
+                Toast.makeText(activityContext,"right",Toast.LENGTH_LONG).show();
 
             }
+        });
+        rightbutton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                outStream.println("right_click_long");
+                isLongPress=true;
+                return true;
+            }
+
         });
         rightbutton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    outStream.println("right_click_long");
-                    Log.d("Right TouchTest", "Right Touch down");
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    outStream.println("right_click_stop");
-                    Log.d("Right TouchTest", "Right Touch up");
+                if(event.getAction()==MotionEvent.ACTION_UP){
+                    if(isLongPress){
+                        outStream.println("right_click_stop");
+                        isLongPress=false;
+                    }
                 }
-                return true;
+                return false;
             }
-
         });
 
         leftbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 outStream.println("left_click");
-//                Toast.makeText(activityContext,"right click",Toast.LENGTH_LONG).show();
-
             }
+        });
+        leftbutton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                    outStream.println("left_click_long");
+                    isLongPress=true;
+                return true;
+            }
+
         });
         leftbutton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    outStream.println("left_click_long");
-                    Log.d("Left TouchTest", "Left Touch down");
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    outStream.println("left_click_stop");
-                    Log.d("Left TouchTest", "Left Touch up");
+                if(event.getAction()==MotionEvent.ACTION_UP){
+                    if(isLongPress){
+                        outStream.println("left_click_stop");
+                        isLongPress=false;
+                    }
                 }
-                return true;
+                return false;
             }
-
         });
     }
 
