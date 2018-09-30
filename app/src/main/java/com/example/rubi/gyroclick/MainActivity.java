@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
@@ -195,8 +196,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
 
         editText.addTextChangedListener(new TextWatcher() {
-            String curText = "";
-
+            String curString = "";
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -205,16 +205,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 System.out.println("Keyboard s: " + s.toString() + ", start: " + start + ", before: " + before + ", count: " + count);
-                if (count != 0 && s.charAt(count - 1) == ' ') {
-                    outStream.println("space");
+                if (start == 0 && count == 0) {
+                    return;
+                } else if (count == 0) {
+                    outStream.println("backspace");
+                    return;
                 }
-                if (before > count) {
+                if (s.charAt(count - 1) == ' ') {
+                    outStream.println("space");
+                    return;
+                }
+                if (s.length() < curString.length()) {
                     // user delete
                     outStream.println("backspace");
-                } else if (before < count) {
-                    // user typed a
+                } else if (s.length() > curString.length()) {
                     outStream.println(s.charAt(count - 1));
                 }
+                curString = s.toString();
+
 //                if(s.length()==1){
 //                    outStream.println(s.toString());
 //                } else if (s.length() > 1) {
@@ -232,7 +240,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void showKeyboard(View v){
         String charToSend;
         if(editText.requestFocus()) {
-            editText.setText("");
             InputMethodManager imm = (InputMethodManager)
                     getSystemService(activityContext.INPUT_METHOD_SERVICE);
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
@@ -243,6 +250,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            }
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
