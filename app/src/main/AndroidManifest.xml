@@ -33,7 +33,8 @@
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            android:windowSoftInputMode="stateHidden|adjustResize">
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         </activity>
 
     </application>

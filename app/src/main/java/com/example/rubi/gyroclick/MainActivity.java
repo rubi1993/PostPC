@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         rightbutton = findViewById(R.id.rightbutton);
         leftbutton = findViewById(R.id.leftbutton);
         editText= findViewById(R.id.hiddenTxt);
-        keyboardbutton= findViewById(R.id.keyboard_button);
+        keyboardbutton= findViewById(R.id.floatingActionButton);
         activityContext  = this;
         ConnectPhoneTask connectPhoneTask = new ConnectPhoneTask();
 
@@ -154,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
         editText.addTextChangedListener(new TextWatcher() {
+            String curText = "";
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -161,9 +163,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length()==1){
-                    outStream.println(s.toString());
+                System.out.println("Keyboard s: " + s.toString() + ", start: " + start + ", before: " + before + ", count: " + count);
+                if (count != 0 && s.charAt(count - 1) == ' ') {
+                    outStream.println("space");
                 }
+                if (before > count) {
+                    // user delete
+                    outStream.println("backspace");
+                } else if (before < count) {
+                    // user typed a
+                    outStream.println(s.charAt(count - 1));
+                }
+//                if(s.length()==1){
+//                    outStream.println(s.toString());
+//                } else if (s.length() > 1) {
+//                    outStream.println(s.toString().substring(s.toString().length() - 1));
+//                }
             }
 
             @Override
@@ -257,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (isConnected)
         {
 //            Toast.makeText(activityContext, String.valueOf(prev_x - axis_acceleration[0]) + "," + String.valueOf(prev_y - axis_acceleration[1]), Toast.LENGTH_LONG).show();
-            Log.d("acceleration: ", "x: " + axis_acceleration[0] + " y: " + axis_acceleration[1] + " z: " + axis_acceleration[2]);
+//            Log.d("acceleration: ", "x: " + axis_acceleration[0] + " y: " + axis_acceleration[1] + " z: " + axis_acceleration[2]);
 //            outStream.println(String.valueOf(prev_x - axis_acceleration[0]) + "," + String.valueOf(prev_y - axis_acceleration[1]));
             outStream.println(String.valueOf(event.values[0]+","+event.values[1]+","+event.values[2]));
         }
