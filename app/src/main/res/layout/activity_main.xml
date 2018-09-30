@@ -8,21 +8,21 @@
     android:fitsSystemWindows="true">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        style="?android:attr/buttonBarStyle" >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/leftbutton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Left"
-            style="?android:attr/buttonBarButtonStyle"/>
+            android:text="Left" />
 
         <View
             android:layout_width="1dp"
@@ -31,15 +31,33 @@
 
         <Button
             android:id="@+id/rightbutton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Right"
-            style="?android:attr/buttonBarButtonStyle"
-             />
+            android:text="Right" />
 
 
     </LinearLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#0080e6e0"
+        android:id="@+id/pauseLayout"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/pauseActivityButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                app:srcCompat="@drawable/pause_activity_icon" />
+
+    </RelativeLayout>
 
     <EditText
         android:id="@+id/hiddenTxt"
@@ -51,13 +69,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/pauseButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/pause_icon"
+        app:fabSize="normal" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/keyboardButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|left"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/keyboard_icon"

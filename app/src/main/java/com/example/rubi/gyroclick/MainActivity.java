@@ -21,6 +21,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 //import java.awt.AWTException;
 //import java.awt.Robot;
@@ -38,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Socket socket;
     private PrintWriter outStream;
     private Button rightbutton,leftbutton;
-    private ImageButton keyboardbutton;
+    private ImageButton keyboardbutton, pauseButton;
+    private ImageView pauseActivityButton;
     private boolean isConnected;
     private Context activityContext;
     private GestureDetectorCompat mDetector;
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private boolean isLongPress=false;
+    private boolean isPaused=false;
+    private RelativeLayout pauseLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.println("onCreate for MainActivity");
@@ -63,9 +68,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         rightbutton = findViewById(R.id.rightbutton);
         leftbutton = findViewById(R.id.leftbutton);
         editText= findViewById(R.id.hiddenTxt);
-        keyboardbutton= findViewById(R.id.floatingActionButton);
+        keyboardbutton= findViewById(R.id.keyboardButton);
+        pauseButton = findViewById(R.id.pauseButton);
+        pauseLayout = findViewById(R.id.pauseLayout);
+        pauseActivityButton = findViewById(R.id.pauseActivityButton);
         activityContext  = this;
-        ConnectPhoneTask connectPhoneTask = new ConnectPhoneTask();
+        final ConnectPhoneTask connectPhoneTask = new ConnectPhoneTask();
 
 
         Intent intent = getIntent();
@@ -153,6 +161,39 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 showKeyboard(v);
             }
         });
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isPaused) {
+                    // user wants to pause now
+                    rightbutton.setEnabled(false);
+                    leftbutton.setEnabled(false);
+
+                    keyboardbutton.setClickable(false);
+                    pauseLayout.setVisibility(RelativeLayout.VISIBLE);
+                    isPaused = true;
+                } else {
+                    rightbutton.setEnabled(true);
+                    leftbutton.setEnabled(true);
+                    keyboardbutton.setClickable(true);
+                    pauseButton.setClickable(true);
+                    pauseLayout.setVisibility(RelativeLayout.INVISIBLE);
+                    isPaused = false;
+                }
+            }
+        });
+        pauseActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // user wants to resume
+                rightbutton.setEnabled(true);
+                leftbutton.setEnabled(true);
+                keyboardbutton.setClickable(true);
+                pauseLayout.setVisibility(RelativeLayout.INVISIBLE);
+                isPaused = false;
+            }
+        });
+
         editText.addTextChangedListener(new TextWatcher() {
             String curText = "";
 
@@ -256,8 +297,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         }
     }
+
     @Override
     public void onSensorChanged(SensorEvent event){
+        if (isPaused) {
+            return;
+        }
         final double alpha = 0.8;
         axis[0] = alpha * axis[0] + (1 - alpha) * event.values[0];
         axis[1] = alpha * axis[1] + (1 - alpha) * event.values[1];
