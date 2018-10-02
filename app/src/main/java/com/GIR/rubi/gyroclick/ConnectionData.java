@@ -1,4 +1,4 @@
-package com.example.rubi.gyroclick;
+package com.GIR.rubi.gyroclick;
 
 public class ConnectionData {
     public static String IP_ADDR = "192.168.0.10";

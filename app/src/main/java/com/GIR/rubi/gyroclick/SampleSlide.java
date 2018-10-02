@@ -1,4 +1,4 @@
-package com.example.rubi.gyroclick;
+package com.GIR.rubi.gyroclick;
 
 
 import android.os.Bundle;
