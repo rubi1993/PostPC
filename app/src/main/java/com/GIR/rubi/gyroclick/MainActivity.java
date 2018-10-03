@@ -1,4 +1,4 @@
-package com.example.rubi.gyroclick;
+package com.GIR.rubi.gyroclick;
 
 import android.content.Context;
 import android.content.Intent;
@@ -210,7 +210,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     outStream.println(s.charAt(count - 1));
                 }
                 curString = s.toString();
-
 //                if(s.length()==1){
 //                    outStream.println(s.toString());
 //                } else if (s.length() > 1) {
