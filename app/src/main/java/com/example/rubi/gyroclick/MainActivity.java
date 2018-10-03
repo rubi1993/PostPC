@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private boolean isLongPress=false;
     private boolean isPaused=false;
     private RelativeLayout pauseLayout;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.println("onCreate for MainActivity");
@@ -74,21 +76,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         pauseLayout = findViewById(R.id.pauseLayout);
         pauseActivityButton = findViewById(R.id.pauseActivityButton);
         activityContext  = this;
-        final ConnectPhoneTask connectPhoneTask = new ConnectPhoneTask();
 
-
-        Intent intent = getIntent();
-        String value = intent.getStringExtra("connection_value"); //if it's a string you stored.
-        if (value != null) {
-            String[] substring = value.split(":");
-            ConnectionData.IP_ADDR = substring[1];
-            ConnectionData.PORT = Integer.parseInt(substring[2]);
-            System.out.println("ConnectionData: " + ConnectionData.IP_ADDR + ":" + ConnectionData.PORT);
-
-        }
-
-
-        connectPhoneTask.execute(ConnectionData.IP_ADDR);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null){
             // Success! There's a magnetometer.
@@ -256,7 +244,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onBackPressed();
         Intent myIntent = new Intent(MainActivity.this, QRScanner.class);
         MainActivity.this.startActivity(myIntent);
-        outStream.close();
+        if (outStream != null) {
+            outStream.close();
+        }
         finish();
     }
 
@@ -265,6 +255,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
         mSensorManager.registerListener(this,   mSensor,
                 SensorManager.SENSOR_DELAY_GAME);
+
+        final ConnectPhoneTask connectPhoneTask = new ConnectPhoneTask();
+
+
+        Intent intent = getIntent();
+        String value = intent.getStringExtra("connection_value"); //if it's a string you stored.
+        if (value != null) {
+            System.out.println("got the:" +value);
+            String[] substring = value.split(":");
+            ConnectionData.IP_ADDR = substring[1];
+            ConnectionData.PORT = Integer.parseInt(substring[2]);
+            System.out.println("ConnectionData: " + ConnectionData.IP_ADDR + ":" + ConnectionData.PORT);
+
+        }
+
+
+        connectPhoneTask.execute(ConnectionData.IP_ADDR);
+
     }
     @Override
     protected void onPause() {
@@ -272,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.i("aa", "pause");
         // to stop the listener and save battery
         mSensorManager.unregisterListener(this);
+        outStream.close();
     }
 
     public class ConnectPhoneTask extends AsyncTask<String,Void,Boolean> {
