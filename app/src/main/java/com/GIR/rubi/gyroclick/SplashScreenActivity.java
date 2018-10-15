@@ -7,8 +7,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
-import java.sql.Connection;
-
 public class SplashScreenActivity extends AppCompatActivity {
 
     @Override

@@ -1,4 +1,4 @@
-//package com.example.rubi.gyroclick;
+//package com.example.rubi.com.GIR.rubi.gyroclick;
 //
 //import android.support.v7.app.AppCompatActivity;
 //import android.os.Bundle;
