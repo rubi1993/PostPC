@@ -53,7 +53,8 @@ public class RemoteDroidServer {
         }
         return null;
     }
-    public static void main() {
+
+    public static void main(String[] args) {
         System.out.println("new main thread started...");
         boolean leftpressed=false;
         boolean rightpressed=false;
